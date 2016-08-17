@@ -69,4 +69,4 @@
 - file: path=/etc/opt/chrome/policies state=directory
 - name: copy chrome policy
   copy: src=chrome-policies/managed dest=/etc/opt/chrome/policies/
-- template: src=homepage.json.j2 dest=/etc/opt/chrome/policies/homepage.json
+- template: src=homepage.json.j2 dest=/etc/opt/chrome/policies/managed/homepage.json
