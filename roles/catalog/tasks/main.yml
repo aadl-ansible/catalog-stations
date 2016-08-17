@@ -1,0 +1,71 @@
+# Use a very basic window manager and login manager
+# idesk is needed for doing a desktop icon
+- name: install xorg and window managers
+  apt: name={{item}} state=installed
+  with_items:
+    - xorg
+    - openbox
+    - slim
+    - idesk
+
+# Base ubuntu does some languages ok but not things like chinese simplified, korean, etc.
+- name: install east asian fonts
+  apt: name={{item}} state=installed
+  with_items:
+    - fonts-arphic-ukai 
+    - fonts-arphic-uming 
+    - fonts-ipafont-gothic 
+    - fonts-ipafont-mincho 
+    - fonts-unfonts-core
+
+# We want to auto login to openbox
+- name: set autologin for slim
+  lineinfile: dest=/etc/slim.conf regexp="^auto_login " insertafter="^#auto_login " line="auto_login yes"
+- name: set default username for slim
+  lineinfile: dest=/etc/slim.conf regexp="^default_user " insertafter="^#default_user " line="default_user {{default_user}}"
+- name: remove xsession directory from slim
+  lineinfile: dest=/etc/slim.conf regexp="^sessiondir " line="#sessiondir " backrefs=yes
+
+# Right now we use Google as our go-to browser.
+# Install from official sources
+- name: add google repository key
+  apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub state=present
+- name: add google chrome repository
+  apt_repository: repo='deb http://dl.google.com/linux/chrome/deb/ stable main' state=present
+- name: install google chrome stable
+  apt: name=google-chrome-stable state=latest
+
+# Copy over a basic menu which just lets staff reboot the machine
+- name: copy openbox menu config
+  copy: src=desktop/menu.xml dest=/etc/xdg/openbox/menu.xml
+
+# Copy over a stripped down version of openbox keyboard/mouse config
+# Disables multiple desktops and their shortcuts
+- name: copy openbox mapping config
+  copy: src=desktop/rc.xml dest=/etc/xdg/openbox/rc.xml
+
+# Basic idesk config. Sets it so single click launches Chrome
+- name: copy idesk config
+  copy: src=desktop/dot.ideskrc dest=/home/{{default_user}}/.ideskrc
+
+# Create .idesktop directory for next icon command
+- file: path=/home/{{default_user}}/.idesktop/ state=directory
+
+# Copy script to launch chrome with needed arguments
+- name: chrome launcher for DRY reuse
+  copy: src=desktop/launch-chrome.sh dest=/usr/bin/launch-chrome mode=a+x
+
+# Create icon / shortcut for Chrome to be launched
+- name: copy chrome icon
+  copy: src=desktop/chrome.png dest=/home/ubuntu/.idesktop/chrome.png
+- name: copy chrome shortcut
+  copy: src=desktop/chrome.lnk dest=/home/ubuntu/.idesktop/chrome.lnk
+
+# Set openbox to disable screen blanking and launch chrome on boot
+- name: copy openbox autostart
+  copy: src=desktop/autostart.sh dest=/etc/xdg/openbox/autostart
+
+# Create policies directory and set up our chrome policies
+- file: path=/etc/opt/chrome/policies state=directory
+- name: copy chrome policy
+  copy: src=chrome-policies/managed dest=/etc/opt/chrome/policies/

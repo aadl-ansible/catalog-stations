@@ -1,0 +1,8 @@
+table Icon
+    Caption: AADL Catalog
+    ToolTip.Caption: Launch Google Chrome
+    Icon: /home/ubuntu/.idesktop/chrome.png
+    Command[0]: launch-chrome
+    X: 450
+    Y: 250
+end
