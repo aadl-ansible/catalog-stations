@@ -1,17 +1,17 @@
-[
-  "PasswordManagerEnabled": false,
+{
   "AllowFileSelectionDialogs": false,
   "AudioCaptureAllowed": false,
   "AudioOutputAllowed": false,
-  "PrintingEnabled": false,
-  "ForceMaximizeOnFirstRun": true,
-  "SyncDisabled": true,
-  "SigninAllowed": false,
-  "ShowHomeButton": true,
-  "DeveloperToolsDisabled": true,
   "AutoFillEnabled": false,
+  "BookmarkBarEnabled": false,
   "BrowserAddPersonEnabled": false,
-  "HideWebStoreIcon": true,
+  "DeveloperToolsDisabled": true,
   "DisablePrintPreview": true,
-  "BookmarkBarEnabled": false
-]
+  "ForceMaximizeOnFirstRun": true,
+  "HideWebStoreIcon": true,
+  "PasswordManagerEnabled": false,
+  "PrintingEnabled": false,
+  "ShowHomeButton": true,
+  "SigninAllowed": false,
+  "SyncDisabled": true,
+}
