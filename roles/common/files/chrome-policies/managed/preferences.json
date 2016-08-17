@@ -1,0 +1,17 @@
+[
+  "PasswordManagerEnabled": false,
+  "AllowFileSelectionDialogs": false,
+  "AudioCaptureAllowed": false,
+  "AudioOutputAllowed": false,
+  "PrintingEnabled": false,
+  "ForceMaximizeOnFirstRun": true,
+  "SyncDisabled": true,
+  "SigninAllowed": false,
+  "ShowHomeButton": true,
+  "DeveloperToolsDisabled": true,
+  "AutoFillEnabled": false,
+  "BrowserAddPersonEnabled": false,
+  "HideWebStoreIcon": true,
+  "DisablePrintPreview": true,
+  "BookmarkBarEnabled": false
+]
