@@ -70,3 +70,10 @@
 - name: copy chrome policy
   copy: src=chrome-policies/managed dest=/etc/opt/chrome/policies/
 - template: src=homepage.json.j2 dest=/etc/opt/chrome/policies/managed/homepage.json
+
+# Cron to launch chrome if it is dead
+- name: copy check chrome script
+  copy: src=check-chrome.sh dest=/usr/bin/check-chrome mode=a+x
+- name: cron to relaunch chrome if not open
+  cron: name="check chrome" minute="*" job="/usr/bin/check-chrome > /dev/null 2>&1 &"
+  become: false
