@@ -77,3 +77,7 @@
 - name: cron to relaunch chrome if not open
   cron: name="check chrome" minute="*" job="/usr/bin/check-chrome > /dev/null 2>&1 &"
   become: false
+
+# Install xprintidle for idle reset script
+- name: install xprintidle
+  apt: name=xprintidle state=installed
