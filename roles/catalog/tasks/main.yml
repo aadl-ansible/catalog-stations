@@ -57,9 +57,9 @@
 
 # Create icon / shortcut for Chrome to be launched
 - name: copy chrome icon
-  copy: src=desktop/chrome.png dest=/home/ubuntu/.idesktop/chrome.png
+  copy: src=desktop/chrome.png dest=/home/{{default_user}}/.idesktop/chrome.png
 - name: copy chrome shortcut
-  copy: src=desktop/chrome.lnk dest=/home/ubuntu/.idesktop/chrome.lnk
+  copy: src=desktop/chrome.lnk dest=/home/{{default_user}}/.idesktop/chrome.lnk
 
 # Set openbox to disable screen blanking and launch chrome on boot
 - name: copy openbox autostart
@@ -81,3 +81,7 @@
 # Install xprintidle for idle reset script
 - name: install xprintidle
   apt: name=xprintidle state=installed
+
+# Install sudoers file for killall command
+- name: allow catalog user to killall for reset
+  copy: src=killall.sudo dest=/etc/sudoers.d/killall
