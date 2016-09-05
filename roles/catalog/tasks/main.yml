@@ -84,4 +84,4 @@
 
 # Install sudoers file for killall command
 - name: allow catalog user to killall for reset
-  copy: src=killall.sudo dest=/etc/sudoers.d/killall
+  copy: src=killall.sudo dest=/etc/sudoers.d/killall validate='visudo -cf %s'
