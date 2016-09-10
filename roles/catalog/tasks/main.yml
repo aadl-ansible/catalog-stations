@@ -65,6 +65,9 @@
 - name: copy openbox autostart
   copy: src=desktop/autostart.sh dest=/etc/xdg/openbox/autostart
 
+# Copy script to fix mouse orientation
+- name: install calibration script
+  copy: src=calibrate-display.sh dest=/usr/bin/calibrate-display mode=a+x
 # Create policies directory and set up our chrome policies
 - file: path=/etc/opt/chrome/policies state=directory
 - name: copy chrome policy
