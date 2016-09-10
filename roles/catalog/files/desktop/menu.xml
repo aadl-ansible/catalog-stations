@@ -6,12 +6,6 @@
                 file:///usr/share/openbox/menu.xsd">
 
 <menu id="root-menu" label="Openbox 3">
-  <item label="Restart">
-    <action name="Execute">
-      <prompt>Are you sure you want to reboot the computer?</prompt>
-      <command>sudo reboot</command>
-    </action>
-  </item>
 </menu>
 
 </openbox_menu>
