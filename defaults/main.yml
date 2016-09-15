@@ -1,0 +1,5 @@
+---
+
+catalog_station_homepage: http://www.aadl.org/catalog
+catalog_station_default_user: catalog
+catalog_station_ntp_server: pool.ntp.org
