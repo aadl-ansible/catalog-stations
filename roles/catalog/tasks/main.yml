@@ -7,6 +7,7 @@
     - openbox
     - slim
     - idesk
+    - fbpanel
 
 # Base ubuntu does some languages ok but not things like chinese simplified, korean, etc.
 - name: install east asian fonts
@@ -88,6 +89,16 @@
 # Install sudoers file for killall command
 - name: allow catalog user to killall for reset
   copy: src=killall.sudo dest=/etc/sudoers.d/killall validate='visudo -cf %s'
+
+# Setup FBPanel
+- name: copy fbpanel config
+  file: path=/home/{{default_user}}/.config/fbpanel state=directory
+- copy: src=desktop/fbpanel.default dest=/home/{{default_user}}/.config/fbpanel/default
+
+# Make time be local. TODO: make this a variable
+- name: fix timezone to Eastern.
+  command: echo "America/Detroit" > /etc/timezone
+- file: path=/etc/localtime src=/usr/share/zoneinfo/America/Detroit state=link force=true
 
 # Install CUPs and disable some of the automatic browsing. Slows down shutdowns.
 - name: install CUPs

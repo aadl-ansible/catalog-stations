@@ -4,4 +4,5 @@ xset s off &
 xrandr -o left &
 /usr/bin/calibrate-display
 idesk &
+fbpanel &
 launch-chrome &
