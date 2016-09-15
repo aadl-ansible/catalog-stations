@@ -107,6 +107,7 @@
   command: systemctl disable avahi-daemon
 - name: disable cups-browsed
   command: systemctl disable cups-browsed
+
 # Install CUPS Printer for West. Need to make this a var/template
 - name: copy lexmark driver deb
   copy: src=lexmark-ppd.deb dest=/tmp/lexmark-ppd.deb
@@ -119,5 +120,11 @@
   command: cp /usr/local/lexmark/ppd/lexmark-PPD-Files-LMAEG/GlobalPPD_1.4/Lexmark_XM1100_Series.ppd /etc/cups/ppd/west-public-1.ppd
 - command: cp /usr/local/lexmark/ppd/lexmark-PPD-Files-LMAEG/GlobalPPD_1.4/Lexmark_XM1100_Series.ppd /etc/cups/ppd/west-public-2.ppd
 - command: service cups start
+
+# Time Sync
+- name: install ntpdate
+  apt: name=ntpdate state=installed
+- name: set up ntpdate cron
+  cron: name="sync time" hour="12" job="/usr/sbin/ntpdate {{ntp_server}} > /dev/null 2>&1 &"
 
 

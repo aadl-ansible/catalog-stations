@@ -1,2 +1,3 @@
 homepage: http://www.aadl.org/catalog
 default_user: catalog
+ntp_server: pool.ntp.org
