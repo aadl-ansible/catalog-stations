@@ -1,0 +1,19 @@
+galaxy_info:
+  author: aadl
+  description: Catalog Computer Kiosks
+  company: Ann Arbor District Library
+  license: license (GPLv3)
+
+  min_ansible_version: 1.2
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - xenial
+
+  galaxy_tags:
+  - kiosk
+  - chrome
+  - aadl
+
+dependencies: []

@@ -1,3 +1,4 @@
+---
 # Use a very basic window manager and login manager
 # idesk is needed for doing a desktop icon
 - name: install xorg and window managers
