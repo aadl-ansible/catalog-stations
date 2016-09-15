@@ -1,4 +1,5 @@
 # AADL Catalog Stations
+[![Build Status](https://travis-ci.org/aadl/catalog-stations.svg?branch=master)](https://travis-ci.org/aadl/catalog-stations)
 
 This repository contains basic configuration and policies for running our chrome-based catalog kiosks.
 
