@@ -24,7 +24,7 @@
 - name: set autologin for slim
   lineinfile: dest=/etc/slim.conf regexp="^auto_login " insertafter="^#auto_login " line="auto_login yes"
 - name: set default username for slim
-  lineinfile: dest=/etc/slim.conf regexp="^default_user " insertafter="^#default_user " line="default_user {{default_user}}"
+  lineinfile: dest=/etc/slim.conf regexp="^default_user " insertafter="^#default_user " line="default_user {{catalog_station_default_user}}"
 - name: remove xsession directory from slim
   lineinfile: dest=/etc/slim.conf regexp="^sessiondir " line="#sessiondir " backrefs=yes
 
@@ -48,10 +48,10 @@
 
 # Basic idesk config. Sets it so single click launches Chrome
 - name: copy idesk config
-  copy: src=desktop/dot.ideskrc dest=/home/{{default_user}}/.ideskrc
+  copy: src=desktop/dot.ideskrc dest=/home/{{catalog_station_default_user}}/.ideskrc
 
 # Create .idesktop directory for next icon command
-- file: path=/home/{{default_user}}/.idesktop/ state=directory
+- file: path=/home/{{catalog_station_default_user}}/.idesktop/ state=directory
 
 # Copy script to launch chrome with needed arguments
 - name: chrome launcher for DRY reuse
@@ -59,9 +59,9 @@
 
 # Create icon / shortcut for Chrome to be launched
 - name: copy chrome icon
-  copy: src=desktop/chrome.png dest=/home/{{default_user}}/.idesktop/chrome.png
+  copy: src=desktop/chrome.png dest=/home/{{catalog_station_default_user}}/.idesktop/chrome.png
 - name: copy chrome shortcut
-  copy: src=desktop/chrome.lnk dest=/home/{{default_user}}/.idesktop/chrome.lnk
+  copy: src=desktop/chrome.lnk dest=/home/{{catalog_station_default_user}}/.idesktop/chrome.lnk
 
 # Set openbox to disable screen blanking and launch chrome on boot
 - name: copy openbox autostart
@@ -93,8 +93,8 @@
 
 # Setup FBPanel
 - name: copy fbpanel config
-  file: path=/home/{{default_user}}/.config/fbpanel state=directory
-- copy: src=desktop/fbpanel.default dest=/home/{{default_user}}/.config/fbpanel/default
+  file: path=/home/{{catalog_station_default_user}}/.config/fbpanel state=directory
+- copy: src=desktop/fbpanel.default dest=/home/{{catalog_station_default_user}}/.config/fbpanel/default
 
 # Make time be local. TODO: make this a variable
 - name: fix timezone to Eastern.
@@ -126,6 +126,6 @@
 - name: install ntpdate
   apt: name=ntpdate state=installed
 - name: set up ntpdate cron
-  cron: name="sync time" hour="12" job="/usr/sbin/ntpdate {{ntp_server}} > /dev/null 2>&1 &"
+  cron: name="sync time" hour="12" job="/usr/sbin/ntpdate {{catalog_station_ntp_server}} > /dev/null 2>&1 &"
 
 
