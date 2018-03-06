@@ -1,5 +1,7 @@
 ---
-- hosts: localhost
-  remote_user: root
+- hosts: all
+  remote_user: it
+  become: yes
+  become_user: root
   roles:
-    - catalog-stations
+    - ../../catalog-stations
