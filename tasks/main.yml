@@ -29,11 +29,23 @@
 
 # We want to auto login to openbox
 - name: set autologin for slim
-  lineinfile: dest=/etc/slim.conf regexp="^auto_login " insertafter="^#auto_login " line="auto_login yes"
+  ansible.builtin.lineinfile:
+    path: /etc/slim.conf
+    regexp: "^auto_login "
+    insertafter: "^#auto_login "
+    line: "auto_login yes"
 - name: set default username for slim
-  lineinfile: dest=/etc/slim.conf regexp="^default_user " insertafter="^#default_user " line="default_user {{catalog_station_default_user}}"
+  ansible.builtin.lineinfile:
+    path: /etc/slim.conf
+    regexp: "^default_user "
+    insertafter: "^#default_user "
+    line: "default_user {{catalog_station_default_user}}"
 - name: remove xsession directory from slim
-  lineinfile: dest=/etc/slim.conf regexp="^sessiondir " line="#sessiondir " backrefs=yes
+  ansible.builtin.lineinfile:
+    path: /etc/slim.conf
+    regexp: "^sessiondir "
+    line: "#sessiondir "
+    backrefs: yes
 
 # Right now we use Google as our go-to browser.
 # Install from official sources
