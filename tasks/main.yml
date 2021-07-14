@@ -1,9 +1,15 @@
 ---
 # Use a very basic window manager and login manager
 # idesk is needed for doing a desktop icon
+- name: Update apt cache if more than 3600 seconds ago
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
 - name: install xorg and window managers
-  apt: name={{item}} state=installed
-  with_items:
+  ansible.builtin.apt:
+    state: present
+    name:
     - xorg
     - openbox
     - slim
@@ -12,12 +18,13 @@
 
 # Base ubuntu does some languages ok but not things like chinese simplified, korean, etc.
 - name: install east asian fonts
-  apt: name={{item}} state=installed
-  with_items:
-    - fonts-arphic-ukai 
-    - fonts-arphic-uming 
-    - fonts-ipafont-gothic 
-    - fonts-ipafont-mincho 
+  ansible.builtin.apt:
+    state: present
+    name:
+    - fonts-arphic-ukai
+    - fonts-arphic-uming
+    - fonts-ipafont-gothic
+    - fonts-ipafont-mincho
     - fonts-unfonts-core
 
 # We want to auto login to openbox
@@ -31,18 +38,18 @@
 # Right now we use Google as our go-to browser.
 # Install from official sources
 - name: add google repository key
-  apt_key: 
-    url: https://dl-ssl.google.com/linux/linux_signing_key.pub 
+  ansible.builtin.apt_key:
+    url: https://dl-ssl.google.com/linux/linux_signing_key.pub
     state: present
 - name: add google chrome repository
-  apt_repository: 
-    repo: 'deb http://dl.google.com/linux/chrome/deb/ stable main' 
+  ansible.builtin.apt_repository:
+    repo: 'deb http://dl.google.com/linux/chrome/deb/ stable main'
     state: present
     filename: 'google-chrome'
 - name: install google chrome stable
-  apt: 
-    name: google-chrome-stable 
-    state: latest
+  ansible.builtin.apt:
+    name: google-chrome-stable
+    state: present
 
 # Copy over a basic menu which just lets staff reboot the machine
 - name: copy openbox menu config
@@ -92,7 +99,9 @@
 
 # Install xprintidle for idle reset script
 - name: install xprintidle
-  apt: name=xprintidle state=installed
+  apt:
+    name: xprintidle
+    state: present
 
 # Install sudoers file for killall command
 - name: allow catalog user to killall for reset
@@ -107,32 +116,3 @@
 - name: fix timezone to Eastern.
   command: echo "America/Detroit" > /etc/timezone
 - file: path=/etc/localtime src=/usr/share/zoneinfo/America/Detroit state=link force=true
-
-# Install CUPs and disable some of the automatic browsing. Slows down shutdowns.
-# - name: install CUPs
-#   apt: name=cups state=installed
-# - name: disable avahi-daemon
-#   command: systemctl disable avahi-daemon
-# - name: disable cups-browsed
-#   command: systemctl disable cups-browsed
-
-# Install CUPS Printer for West. Need to make this a var/template
-# - name: copy lexmark driver deb
-#   copy: src=lexmark-ppd.deb dest=/tmp/lexmark-ppd.deb
-# - name: install lexmark drivers
-#   command: dpkg -i /tmp/lexmark-ppd.deb
-# - command: service cups stop
-# - name: copy printer config
-#   copy: src=printers.conf dest=/etc/cups/printers.conf
-# - name: copy global ppd files for queues
-#   command: cp /usr/local/lexmark/ppd/lexmark-PPD-Files-LMAEG/GlobalPPD_1.4/Lexmark_XM1100_Series.ppd /etc/cups/ppd/west-public-1.ppd
-# - command: cp /usr/local/lexmark/ppd/lexmark-PPD-Files-LMAEG/GlobalPPD_1.4/Lexmark_XM1100_Series.ppd /etc/cups/ppd/west-public-2.ppd
-# - command: service cups start
-
-# Time Sync
-# - name: install ntpdate
-#   apt: name=ntpdate state=installed
-# - name: set up ntpdate cron
-#   cron: name="sync time" hour="12" job="/usr/sbin/ntpdate {{catalog_station_ntp_server}} > /dev/null 2>&1 &"
-
-
