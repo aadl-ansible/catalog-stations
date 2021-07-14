@@ -4,7 +4,7 @@ galaxy_info:
   company: Ann Arbor District Library
   license: license (GPLv3)
 
-  min_ansible_version: 1.2
+  min_ansible_version: 2.9
 
   platforms:
   - name: Ubuntu
