@@ -1,5 +1,5 @@
-- hosts: catalog-stations
+- hosts: catalogstations
   roles:
-    - catalog
+    - ../catalog-stations
   become: yes
   become_user: root
