@@ -97,10 +97,21 @@
 - name: install calibration script
   ansible.builtin.copy: src=calibrate-display.sh dest=/usr/bin/calibrate-display mode=a+x
 # Create policies directory and set up our chrome policies
-- ansible.builtin.file: path=/etc/opt/chrome/policies state=directory
+- name: Make sure policy directory exists
+  ansible.builtin.file:
+    path: /etc/opt/chrome/policies
+    state: directory
+  tags: policies
 - name: copy chrome policy
-  ansible.builtin.copy: src=chrome-policies/managed dest=/etc/opt/chrome/policies/
-- template: src=homepage.json.j2 dest=/etc/opt/chrome/policies/managed/homepage.json
+  ansible.builtin.copy:
+    src: chrome-policies/managed
+    dest: /etc/opt/chrome/policies/
+  tags: policies
+- name: Set homepage for chrome
+  template:
+    src: homepage.json.j2
+    dest: /etc/opt/chrome/policies/managed/homepage.json
+  tags: policies
 
 # Cron to launch chrome if it is dead
 - name: copy check chrome script
