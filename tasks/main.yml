@@ -39,7 +39,7 @@
     path: /etc/slim.conf
     regexp: "^default_user "
     insertafter: "^#default_user "
-    line: "default_user {{catalog_station_default_user}}"
+    line: "default_user {{ catalog_station_default_user }}"
 - name: remove xsession directory from slim
   ansible.builtin.lineinfile:
     path: /etc/slim.conf
@@ -65,37 +65,57 @@
 
 # Copy over a basic menu which just lets staff reboot the machine
 - name: copy openbox menu config
-  ansible.builtin.copy: src=desktop/menu.xml dest=/etc/xdg/openbox/menu.xml
+  ansible.builtin.copy:
+    src: desktop/menu.xml
+    dest: /etc/xdg/openbox/menu.xml
 
 # Copy over a stripped down version of openbox keyboard/mouse config
 # Disables multiple desktops and their shortcuts
 - name: copy openbox mapping config
-  ansible.builtin.copy: src=desktop/rc.xml dest=/etc/xdg/openbox/rc.xml
+  ansible.builtin.copy:
+    src: desktop/rc.xml
+    dest: /etc/xdg/openbox/rc.xml
 
 # Basic idesk config. Sets it so single click launches Chrome
 - name: copy idesk config
-  ansible.builtin.copy: src=desktop/dot.ideskrc dest=/home/{{catalog_station_default_user}}/.ideskrc
+  ansible.builtin.copy:
+    src: desktop/dot.ideskrc
+    dest: /home/{{ catalog_station_default_user }}/.ideskrc
 
 # Create .idesktop directory for next icon command
-- ansible.builtin.file: path=/home/{{catalog_station_default_user}}/.idesktop/ state=directory
+- name: Create .idesktop directory
+  ansible.builtin.file:
+    path: /home/{{ catalog_station_default_user }}/.idesktop/
+    state: directory
 
 # Copy script to launch chrome with needed arguments
 - name: chrome launcher for DRY reuse
-  ansible.builtin.copy: src=desktop/launch-chrome.sh dest=/usr/bin/launch-chrome mode=a+x
+  ansible.builtin.copy:
+    src: desktop/launch-chrome.sh
+    dest: /usr/bin/launch-chrome mode=a+x
 
 # Create icon / shortcut for Chrome to be launched
 - name: copy chrome icon
-  ansible.builtin.copy: src=desktop/chrome.png dest=/home/{{catalog_station_default_user}}/.idesktop/chrome.png
+  ansible.builtin.copy:
+    src: desktop/chrome.png
+    dest: /home/{{ catalog_station_default_user }}/.idesktop/chrome.png
 - name: copy chrome shortcut
-  ansible.builtin.copy: src=desktop/chrome.lnk dest=/home/{{catalog_station_default_user}}/.idesktop/chrome.lnk
+  ansible.builtin.copy:
+    src: desktop/chrome.lnk
+    dest: /home/{{ catalog_station_default_user }}/.idesktop/chrome.lnk
 
 # Set openbox to disable screen blanking and launch chrome on boot
 - name: copy openbox autostart
-  ansible.builtin.copy: src=desktop/autostart.sh dest=/etc/xdg/openbox/autostart
+  ansible.builtin.copy:
+    src: desktop/autostart.sh
+    dest: /etc/xdg/openbox/autostart
 
 # Copy script to fix mouse orientation
 - name: install calibration script
-  ansible.builtin.copy: src=calibrate-display.sh dest=/usr/bin/calibrate-display mode=a+x
+  ansible.builtin.copy:
+    src: calibrate-display.sh
+    dest: /usr/bin/calibrate-display
+    mode: a+x
 # Create policies directory and set up our chrome policies
 - name: Make sure policy directory exists
   ansible.builtin.file:
@@ -115,9 +135,14 @@
 
 # Cron to launch chrome if it is dead
 - name: copy check chrome script
-  ansible.builtin.copy: src=check-chrome.sh dest=/usr/bin/check-chrome mode=a+x
+  ansible.builtin.copy:
+    src: check-chrome.sh
+    dest: /usr/bin/check-chrome mode=a+x
 - name: cron to relaunch chrome if not open
-  ansible.builtin.cron: name="check chrome" minute="*" job="/usr/bin/check-chrome > /dev/null 2>&1 &"
+  ansible.builtin.cron:
+    name: "check chrome"
+    minute: "*"
+    job: "/usr/bin/check-chrome > /dev/null 2>&1 &"
   become: false
 
 # Install xprintidle for idle reset script
@@ -128,14 +153,29 @@
 
 # Install sudoers file for killall command
 - name: allow catalog user to killall for reset
-  ansible.builtin.copy: src=killall.sudo dest=/etc/sudoers.d/killall validate='visudo -cf %s'
+  ansible.builtin.copy:
+    src: killall.sudo
+    dest: /etc/sudoers.d/killall
+    validate: 'visudo -cf %s'
 
 # Setup FBPanel
-- name: copy fbpanel config
-  ansible.builtin.file: path=/home/{{catalog_station_default_user}}/.config/fbpanel state=directory
-- ansible.builtin.copy: src=desktop/fbpanel.default dest=/home/{{catalog_station_default_user}}/.config/fbpanel/default
+- name: Create fbpanel config directory
+  ansible.builtin.file:
+    path: /home/{{ catalog_station_default_user }}/.config/fbpanel
+    state: directory
+- name: Copy fbpanel config
+  ansible.builtin.copy:
+    src: desktop/fbpanel.default
+    dest: /home/{{ catalog_station_default_user }}/.config/fbpanel/default
 
 # Make time be local. TODO: make this a variable
-- name: fix timezone to Eastern.
-  ansible.builtin.command: echo "America/Detroit" > /etc/timezone
-- ansible.builtin.file: path=/etc/localtime src=/usr/share/zoneinfo/America/Detroit state=link force=true
+- name: fix timezone to Eastern in /etc/timezone.
+  ansible.builtin.copy:
+    content: "America/Detroit"
+    dest: /etc/timezone
+- name: set localtime symlink to eastern.
+  ansible.builtin.file:
+    path: /etc/localtime
+    src: /usr/share/zoneinfo/America/Detroit
+    state: link
+    force: true
