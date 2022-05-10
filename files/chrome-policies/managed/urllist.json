@@ -1,6 +1,6 @@
 {
-  "URLBlacklist": [ "*" ],
-  "URLWhitelist": [
+  "URLBlocklist": [ "*" ],
+  "URLAllowlist": [
     "10.0.33.9",
     "aadl.org",
     "akamai.net",
