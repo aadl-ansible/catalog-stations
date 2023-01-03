@@ -1,0 +1,71 @@
+- name: Set policy fact for run
+  set_fact:
+    policy_path: /etc/chromium/policies
+    chrome_kiosk_binary: chromium-browser
+
+- name: Use PPA to avoid ubuntu using a snap package
+  ansible.builtin.apt_repository:
+    repo: 'ppa:phd/chromium-browser'
+    update_cache: yes
+  when: ansible_distribution_release != 'xenial'
+
+- name: Pin chromium packages to PPA
+  ansible.builtin.copy:
+    src: phd-chromium-browser
+    dest: /etc/apt/preferences.d/phd-chromium-browser
+  when: ansible_distribution_release != 'xenial'
+
+- name: Ensure chromium is installed
+  ansible.builtin.apt:
+    name: chromium-browser
+    state: present
+    cache_valid_time: 3600
+
+- name: Copy kiosk chromium launcher
+  ansible.builtin.copy:
+    src: desktop/chrome-kiosk.sh
+    dest: /usr/bin/chrome-kiosk
+    mode: 'a+x'
+
+# Create icon / shortcut for Chrome to be launched
+- name: copy chrome icon
+  ansible.builtin.copy:
+    src: desktop/chrome.png
+    dest: /home/{{ catalog_station_default_user }}/.idesktop/chrome.png
+- name: copy chrome shortcut
+  ansible.builtin.copy:
+    src: desktop/chrome.lnk
+    dest: /home/{{ catalog_station_default_user }}/.idesktop/chrome.lnk
+
+- name: copy check chrome script
+  ansible.builtin.copy:
+    src: check-chrome.sh
+    dest: /usr/bin/check-chrome
+    mode: 'a+x'
+- name: cron to relaunch chrome if not open
+  ansible.builtin.cron:
+    name: "check chrome"
+    minute: "*"
+    job: "/usr/bin/check-chrome > /dev/null 2>&1 &"
+  become: false
+
+    # We will create the directories but don't remove in case manually created
+- name: Create chromium policy directories if needed
+  ansible.builtin.file:
+    path: '{{ policy_path }}/{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - managed
+    - recommended
+
+- name: copy chrome policy
+  ansible.builtin.copy:
+    src: chrome-policies/managed
+    dest: '{{ policy_path }}'
+  tags: policies
+- name: Set homepage for chrome
+  template:
+    src: homepage.json.j2
+    dest: '{{ policy_path }}/managed/homepage.json'
+  tags: policies
