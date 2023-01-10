@@ -3,6 +3,7 @@
 catalog_station_homepage: https://aadl.org/catalog
 catalog_station_default_user: it
 catalog_station_ntp_server: time.aadl.org
+catalog_station_elo_monitor: false
 default_user: it
 ansible_ssh_user: it
 ansible_python_interpreter: /usr/bin/python3

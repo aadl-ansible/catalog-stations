@@ -100,3 +100,10 @@
     src: killall.sudo.j2
     dest: /etc/sudoers.d/killall
     validate: 'visudo -cf %s'
+
+- name: Calibrate ELO Display
+  ansible.builtin.copy:
+    src: calibrate-display.sh
+    dest: /usr/bin/calibrate-display
+    mode: 'a+x'
+  when: catalog_station_elo_monitor
